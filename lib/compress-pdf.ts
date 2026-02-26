@@ -1,4 +1,5 @@
 import { formatSize } from './format-size';
+import type { PDFDocument as PDFDocumentType } from 'pdf-lib';
 
 type ProgressCallback = (percent: number, step: string) => void;
 
@@ -13,7 +14,7 @@ export async function compressPDF(
 
   const arrayBuffer = await file.arrayBuffer();
 
-  let pdfDoc: InstanceType<typeof PDFDocument>;
+  let pdfDoc: PDFDocumentType;
   try {
     pdfDoc = await PDFDocument.load(arrayBuffer, {
       ignoreEncryption: false,
@@ -44,7 +45,8 @@ export async function compressPDF(
 
   onProgress?.(90, `Checking size: ${formatSize(pdfBytes.byteLength)}`);
 
-  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+  
+  const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
   const wasAboveTarget = blob.size > targetBytes;
 
   onProgress?.(100, 'Done.');
