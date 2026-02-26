@@ -1,5 +1,7 @@
 export type SupportedMimeType = 'image/jpeg' | 'image/png' | 'application/pdf';
 
+export type FileItemStatus = 'idle' | 'compressing' | 'done' | 'error';
+
 export interface UploadedFile {
   file: File;
   name: string;
@@ -7,6 +9,15 @@ export interface UploadedFile {
   sizeMB: number;
   sizeFormatted: string;
   previewUrl?: string;
+}
+
+export interface FileItem {
+  id: string;
+  uploadedFile: UploadedFile;
+  status: FileItemStatus;
+  progress: ProgressState;
+  result?: CompressionResult;
+  errorMessage?: string;
 }
 
 export interface CompressionResult {
